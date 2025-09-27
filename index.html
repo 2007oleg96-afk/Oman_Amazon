@@ -1,11 +1,86 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="uk">
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="refresh" content="0;url=https://t.me/Oman_Amazon">
-    <title>Переадресація...</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Відкрити Telegram</title>
+  <style>
+    body{font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;display:flex;align-items:center;justify-content:center;height:100vh;margin:0;background:#f7fafc;color:#10223a}
+    .card{background:#fff;padding:20px;border-radius:12px;box-shadow:0 6px 24px rgba(16,34,58,0.08);max-width:420px;text-align:center}
+    .btn{display:inline-block;padding:10px 16px;margin:8px;border-radius:8px;text-decoration:none;color:#fff}
+    .btn-primary{background:#0088cc}
+    .btn-secondary{background:#2d3748}
+    .muted{color:#65707a;font-size:14px}
+    input.link{width:100%;padding:8px;margin-top:10px;border:1px solid #e6edf3;border-radius:8px}
+  </style>
 </head>
 <body>
-    <p>Йде перенаправлення на Telegram... Якщо не перенаправило, <a href="https://t.me/Oman_Amazon">натисніть тут</a>.</p>
+  <div class="card">
+    <h2>Відкрити канал у Telegram</h2>
+    <p class="muted">Якщо нічого не відкрилось — скористайся кнопками або скопіюй посилання.</p>
+
+    <!-- ЗАМІНИТЬ сюди свій юзернейм -->
+    <script>
+      const channel = "oman_amazon"; // наприклад: my_channel_name
+      const tme = "https://t.me/" + channel;
+      const tgScheme = "tg://resolve?domain=" + channel;
+    </script>
+
+    <div id="actions">
+      <a id="openApp" class="btn btn-primary" href="#" onclick="openApp();return false;">Відкрити в Telegram (додаток)</a>
+      <a id="openWeb" class="btn btn-secondary" href="#" onclick="openWeb();return false;">Відкрити в браузері</a>
+    </div>
+
+    <input id="linkbox" class="link" readonly value="" />
+
+    <div style="margin-top:12px">
+      <button onclick="copyLink()">Копіювати посилання</button>
+    </div>
+
+    <div style="margin-top:14px">
+      <img id="qr" alt="QR" style="width:150px;height:150px;border-radius:8px" />
+    </div>
+
+    <p class="muted" style="margin-top:12px">Якщо у TikTok відкривається in‑app browser — натисни три крапки → "Open in browser" для кращого результату.</p>
+  </div>
+
+<script>
+  // встановлюємо значення після підключення скрипта
+  (function(){
+    const channel = "oman_amazon";
+    const tme = "https://t.me/" + channel;
+    const tgScheme = "tg://resolve?domain=" + channel;
+    document.getElementById('linkbox').value = tme;
+    // генеруємо QR через Google Charts (проста опція)
+    const qr = document.getElementById('qr');
+    const qrSrc = "https://chart.googleapis.com/chart?cht=qr&chs=300x300&chl=" + encodeURIComponent(tme);
+    qr.src = qrSrc;
+
+    window.openApp = function(){
+      // спроба відкрити через tg://
+      location.href = tgScheme;
+      // якщо не спрацює, через секунду відкриємо веб-версію як fallback
+      setTimeout(function(){ window.location.href = tme; }, 1200);
+    };
+
+    window.openWeb = function(){
+      window.location.href = tme;
+    };
+
+    window.copyLink = function(){
+      navigator.clipboard && navigator.clipboard.writeText(tme).then(function(){
+        alert("Посилання скопійовано: " + tme);
+      }, function(){
+        // fallback
+        const el = document.createElement('textarea');
+        el.value = tme;
+        document.body.appendChild(el);
+        el.select();
+        try { document.execCommand('copy'); alert('Посилання скопійовано'); } catch(e){ prompt('Скопіюй посилання вручну:', tme); }
+        document.body.removeChild(el);
+      });
+    };
+  })();
+</script>
 </body>
 </html>
